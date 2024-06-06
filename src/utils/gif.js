@@ -1,6 +1,6 @@
 import fse from 'fs-extra'
 import { execSync } from 'child_process'
-import { ensureImageMagickInstalled } from './tool'
+import { ensureGifskiInstalled, ensureImageMagickInstalled } from './tool'
 import { parseFilePath } from './file'
 
 export function getGifInfo(gifPath) {
@@ -53,4 +53,15 @@ export function gif2png(gifPath, pngDir) {
   fse.removeSync(unoptimizedFilePath)
 
   console.log('splited 🎉')
+}
+
+export function png2gif(pngDir, gifPath) {
+  ensureGifskiInstalled()
+
+  const { dir } = parseFilePath(gifPath)
+  fse.ensureDirSync(dir)
+
+  // 帧率与 Delay Time 互为倒数的关系（前提是二者单位一致）
+  const fps = 10
+  // TODO:
 }
