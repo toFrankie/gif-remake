@@ -3,13 +3,13 @@
 import path from 'path'
 import { dirname } from 'desm'
 
-import { getGifInfo, gif2png } from './utils/gif'
+import { getGifInfo, gif2png, png2gif } from './utils/gif'
+import { createPngs, renamePngs } from './utils/png'
 import {
   ensureGifsicleInstalled,
   ensureGifskiInstalled,
   ensureImageMagickInstalled,
 } from './utils/tool'
-import { parseFilePath } from './utils/file'
 
 const __dirname = dirname(import.meta.url)
 
@@ -22,9 +22,11 @@ const gifPath = path.resolve(__dirname, '../test/demo.gif')
 const gifInfo = getGifInfo(gifPath)
 
 const pngDir = path.resolve(__dirname, '../test/png')
+
 gif2png(gifPath, pngDir)
+createPngs({ width: 350, height: 300, count: 13, outputDir: pngDir })
+renamePngs(pngDir)
+// TODO: 重新合并时要求 png 宽高要一致。
+png2gif(pngDir, gifPath, 400)
 
-const pathInfo = parseFilePath(gifPath)
-
-console.log(gifInfo)
-console.log(pathInfo)
+// console.log(gifInfo)

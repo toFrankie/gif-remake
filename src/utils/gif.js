@@ -38,7 +38,7 @@ export function gif2png(gifPath, pngDir) {
   const unoptimizedFilePath = `${dir}/${filename}_unoptimized${extname}`
   const unoptimizedCommond = `magick ${gifPath} -coalesce ${unoptimizedFilePath}`
   execSync(unoptimizedCommond)
-  console.log('unoptimized 🎉')
+  console.log('gif: unoptimized 🎉')
 
   // 清空目录内的文件
   fse.removeSync(pngDir)
@@ -52,16 +52,20 @@ export function gif2png(gifPath, pngDir) {
   // 删除临时文件
   fse.removeSync(unoptimizedFilePath)
 
-  console.log('splited 🎉')
+  console.log('gif: splited 🎉')
 }
 
-export function png2gif(pngDir, gifPath) {
+export function png2gif(pngDir, gifPath, delayTime) {
   ensureGifskiInstalled()
 
   const { dir } = parseFilePath(gifPath)
   fse.ensureDirSync(dir)
 
   // 帧率与 Delay Time 互为倒数的关系（前提是二者单位一致）
-  const fps = 10
-  // TODO:
+  const fps = 100 / delayTime
+
+  // FIXME: 合成的 GIF 有问题
+  const command = `gifski --repeat -1 -o ${gifPath} --fps ${fps} ${pngDir}/frame*.png`
+  execSync(command)
+  console.log('gif: merged 🎉')
 }
